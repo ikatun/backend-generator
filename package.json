@@ -11,6 +11,15 @@
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.15.1",
     "@oclif/plugin-help": "^2.2.3",
+    "@types/app-root-path": "^1.2.4",
+    "@types/bluebird": "^3.5.30",
+    "@types/lodash": "^4.14.150",
+    "app-root-path": "^3.0.0",
+    "bluebird": "^3.7.2",
+    "clean-deep": "^3.3.0",
+    "lodash": "^4.17.15",
+    "make-dir": "^3.0.2",
+    "pluralize": "^8.0.0",
     "tslib": "^1.11.1"
   },
   "devDependencies": {
