@@ -16,7 +16,7 @@ export function generateOneToOneOwnerDeclarations(relations: Array<ISingleErRela
   return nullableRelations
     .map(
       r =>
-        `  @OneToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
+        `  @ORM.OneToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
         })
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
@@ -32,10 +32,10 @@ export function generateOneToOneSecondaryDeclarations(relations: Array<ISingleEr
 
   return relations
     .map(r => {
-      return `  @OneToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(
+      return `  @ORM.OneToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(
         r.otherTypeName,
       )}.${r.otherName} ${generateRelationArgs(r)})
-  @JoinColumn()
+  @ORM.JoinColumn()
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
 `;
     })
@@ -50,7 +50,7 @@ export function generateOneToManyDeclarations(relations: Array<ISingleErRelation
   return relations
     .map(
       r =>
-        `  @OneToMany(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
+        `  @ORM.OneToMany(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
         })
   public ${r.myName}: Promise<Array<${r.otherTypeName}>>;`,
@@ -87,7 +87,7 @@ export function generateManyToOneDeclarations(relations: Array<ISingleErRelation
   return relations
     .map(
       r =>
-        `  @ManyToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
+        `  @ORM.ManyToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
         } ${generateRelationArgs(r)})
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;`,
@@ -114,7 +114,7 @@ export function generateSingleModel(model: ISingleErModel, ctx: IGeneratorContex
 
   const dbFields = model.fields.filter(f => f.visibility === '+' || f.visibility === '-');
 
-  return `import { Column, JoinColumn, Entity, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+  return `import * as ORM from 'typeorm';
 
 ${generateTypesImports(types.filter(type => type !== model.name))}
 ${generateEnumsImports(model.fields)}
@@ -124,9 +124,9 @@ ${generateEnumsImports(model.fields)}
 
 // <keep-decorators>
 // </keep-decorators>
-@Entity()
+@ORM.Entity()
 export class ${name} {
-  @PrimaryGeneratedColumn()
+  @ORM.PrimaryGeneratedColumn()
   id: number;
 
 ${dbFields.map(generateField(ctx)).join('\n\n')}
@@ -139,10 +139,10 @@ ${generateOneToManyDeclarations(oneToManyRelations)}
 ${generateOneToOneOwnerDeclarations(oneToOneOwnerRelations)}
 ${generateOneToOneSecondaryDeclarations(oneToOneSecondaryRelations)}
 
-  @CreateDateColumn()
+  @ORM.CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @ORM.UpdateDateColumn()
   updatedAt: Date;
 
   // <keep-methods>

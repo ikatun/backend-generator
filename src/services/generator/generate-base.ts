@@ -77,6 +77,6 @@ export const generateField = (ctx: IGeneratorContext) => (field: IFieldDefinitio
     ? columnArgsDefault.replace(/}$/, `,${columnArgsFromCode}  }`)
     : `{${columnArgsFromCode}  }`;
 
-  return `  @Column(${columnArgs})
+  return `  @ORM.Column(${columnArgs})
   public ${getFieldName(field)}: ${getTsTypeName(field)};`;
 };
