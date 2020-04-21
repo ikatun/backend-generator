@@ -50,9 +50,9 @@ export function generateOneToManyDeclarations(relations: Array<ISingleErRelation
   return relations
     .map(
       r =>
-        `  @ORM.OneToMany(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
-          r.otherName
-        })
+        `  @ORM.OneToMany(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(
+          r.otherTypeName,
+        )}.${r.otherName})
   public ${r.myName}: Promise<Array<${r.otherTypeName}>>;`,
     )
     .join('\n\n');
@@ -87,7 +87,9 @@ export function generateManyToOneDeclarations(relations: Array<ISingleErRelation
   return relations
     .map(
       r =>
-        `  @ORM.ManyToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
+        `
+@ORM.Index()
+@ORM.ManyToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
         } ${generateRelationArgs(r)})
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;`,
