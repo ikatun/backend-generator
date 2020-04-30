@@ -20,6 +20,9 @@ export function generateOneToOneOwnerDeclarations(relations: Array<ISingleErRela
           r.otherName
         })
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
+
+  @ORM.Column({ type: 'int' })
+  public ${getRelationName(r)}Id: ${getRelationOtherTypeName({ ...r, otherTypeName: 'number' })};
 `,
     )
     .join('\n');
@@ -37,6 +40,9 @@ export function generateOneToOneSecondaryDeclarations(relations: Array<ISingleEr
       )}.${r.otherName} ${generateRelationArgs(r)})
   @ORM.JoinColumn()
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
+
+  @ORM.Column({ type: 'int' })
+  public ${getRelationName(r)}Id: ${getRelationOtherTypeName({ ...r, otherTypeName: 'number' })};
 `;
     })
     .join('\n\n');
@@ -92,7 +98,11 @@ export function generateManyToOneDeclarations(relations: Array<ISingleErRelation
 @ORM.ManyToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
         } ${generateRelationArgs(r)})
-  public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;`,
+  public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
+
+  @ORM.Column({ type: 'int' })
+  public ${getRelationName(r)}Id: ${getRelationOtherTypeName({ ...r, otherTypeName: 'number' })};
+`,
     )
     .join('\n\n');
 }

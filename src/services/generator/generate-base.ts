@@ -46,7 +46,7 @@ export function generateEnumsImports(fields: Array<IFieldDefinition>) {
 }
 
 export const generateField = (ctx: IGeneratorContext) => (field: IFieldDefinition) => {
-  const customColumnArgsContentPart = findBetweenReversed(ctx.existingContent, '@Column', `public ${field.name}`);
+  const customColumnArgsContentPart = findBetweenReversed(ctx.existingContent, '@ORM.Column', `public ${field.name}`);
   const customColumnData = (
     (customColumnArgsContentPart &&
       findBetween(customColumnArgsContentPart, '// <custom-column-args>', '// </custom-column-args>')) ||
