@@ -28,28 +28,23 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`backend-generator hello [FILE]`](#backend-generator-hello-file)
+* [`backend-generator er [DESTINATION]`](#backend-generator-er-destination)
 * [`backend-generator help [COMMAND]`](#backend-generator-help-command)
 
-## `backend-generator hello [FILE]`
+## `backend-generator er [DESTINATION]`
 
-describe the command here
+Generate TypeORM models from model.er file
 
 ```
 USAGE
-  $ backend-generator hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  $ backend-generator er [DESTINATION]
 
 EXAMPLE
-  $ backend-generator hello
-  hello world from ./src/hello.ts!
+  $ backend-generator er
+  ER model generated.
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/ikatun/backend-generator/blob/v0.0.1/src/commands/hello.ts)_
+_See code: [src/commands/er.ts](https://github.com/ikatun/backend-generator/blob/v0.0.1/src/commands/er.ts)_
 
 ## `backend-generator help [COMMAND]`
 
