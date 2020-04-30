@@ -26,6 +26,7 @@ export interface ISingleErRelation {
   optional: boolean;
   isFirst: boolean;
   autoAssignKey?: string;
+  through?: string;
 }
 
 export interface ISingleErModel {
@@ -41,6 +42,7 @@ export interface IRelationComponent {
   type: string;
   optional: boolean;
   autoAssignKey?: string;
+  through?: string;
 }
 
 export function isEnum(field: IFieldDefinition) {

@@ -1,4 +1,4 @@
-import { drop, flatten, includes } from 'lodash';
+import { drop, flatten, includes, lowerFirst } from 'lodash';
 
 import {
   IFieldDefinition,
@@ -40,10 +40,18 @@ function getRelationParts(relation: string) {
 }
 
 function getPartComponents(relationPart: string) {
-  return relationPart
-    .split(/ has many | as | has one | = /g)
+  const parts = relationPart
+    .split(/ through | has many | as | has one | = /g)
     .map(trim)
     .filter(x => x);
+
+  if (!relationPart.includes(' through ')) {
+    const [source, target, as, autoAssignKey] = parts;
+    return { source, target, as, autoAssignKey };
+  }
+
+  const [source, target, through, as, autoAssignKey] = parts;
+  return { source, target, through, as, autoAssignKey };
 }
 
 function getPartType(relationPart: string) {
@@ -57,7 +65,7 @@ function getPartType(relationPart: string) {
 }
 
 function getRelationPart(relationPart: string): IRelationComponent {
-  const [source, target, as, autoAssignKey] = getPartComponents(relationPart);
+  const { source, target, as, autoAssignKey, through } = getPartComponents(relationPart);
   const type = getPartType(relationPart);
 
   const optional = as.endsWith('?');
@@ -69,6 +77,7 @@ function getRelationPart(relationPart: string): IRelationComponent {
     optional,
     as: as.replace('?', ''),
     autoAssignKey,
+    through,
   };
 }
 
@@ -83,8 +92,57 @@ function getRelation(relation: string): IRelationDefinition {
   return { first, second };
 }
 
+function createManyToManyRelation(first: IRelationComponent, second: IRelationComponent): Array<ISingleErRelation> {
+  if (!first.through || !second.through) {
+    throw new Error('Missing `through` for many to many relation');
+  }
+
+  const relationDefinition1: IRelationDefinition = {
+    first: {
+      source: first.source,
+      target: first.through,
+      as: first.as,
+      autoAssignKey: first.autoAssignKey,
+      optional: first.optional,
+      type: 'many',
+    },
+    second: {
+      source: first.through,
+      target: first.source,
+      as: lowerFirst(first.source),
+      optional: false,
+      type: 'one',
+    },
+  };
+
+  const relationDefinition2: IRelationDefinition = {
+    first: {
+      source: second.source,
+      target: second.through,
+      as: second.as,
+      autoAssignKey: second.autoAssignKey,
+      optional: second.optional,
+      type: 'many',
+    },
+    second: {
+      source: second.through,
+      target: second.source,
+      as: lowerFirst(second.source),
+      optional: false,
+      type: 'one',
+    },
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return [...convertToSingleRelations(relationDefinition1), ...convertToSingleRelations(relationDefinition2)];
+}
+
 function convertToSingleRelations(relationDefinition: IRelationDefinition): Array<ISingleErRelation> {
   const { first, second } = relationDefinition;
+
+  if (first.through || second.through) {
+    return createManyToManyRelation(first, second);
+  }
 
   const firstRelation: ISingleErRelation = {
     myName: first.as,
