@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import { Command, flags } from '@oclif/command';
 import path from 'path';
 
 import { generateErModels } from '../services/generate-er-models';
@@ -12,13 +12,18 @@ ER model generated.
 `,
   ];
 
-  static flags = {};
+  static flags = {
+    lazy: flags.boolean(),
+  };
+
   static args = [{ name: 'destination' }];
 
   async run() {
-    const { args } = this.parse(Er);
+    const { args, flags } = this.parse(Er);
     const { destination } = args;
+    const { lazy } = flags;
+
     const destinationAbsolute = path.join(process.cwd(), destination);
-    await generateErModels(destinationAbsolute, 'model.er');
+    await generateErModels(destinationAbsolute, 'model.er', lazy);
   }
 }

@@ -1,0 +1,1 @@
+{"version":"0.0.1","commands":{"er":{"id":"er","description":"Generate TypeORM models from model.er file","pluginName":"backend-generator","pluginType":"core","aliases":[],"examples":["$ backend-generator er\nER model generated.\n"],"flags":{"lazy":{"name":"lazy","type":"boolean","allowNo":false}},"args":[{"name":"destination"}]}}}

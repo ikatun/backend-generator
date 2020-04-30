@@ -9,8 +9,9 @@ import { generateSingleModel } from './generator/generate-single-model';
 import { getEnumName, isEnum } from './generator/model-types';
 import { parseErModel } from './generator/parse-er-model';
 import { writeToFile } from './generator/write-to-file';
+import { delazify } from './delazify';
 
-export async function generateErModels(cwd: string, pathToModelFile: string) {
+export async function generateErModels(cwd: string, pathToModelFile: string, lazy: boolean) {
   const modelsData = fs.readFileSync(path.join(cwd, pathToModelFile), { encoding: 'utf8' });
   const models = parseErModel(modelsData);
 
@@ -22,7 +23,7 @@ export async function generateErModels(cwd: string, pathToModelFile: string) {
 
     const ctx = fileToGeneratorContext(dirNameModels, `${name}.ts`);
     const generatedModel = generateSingleModel(model, ctx);
-    await writeToFile(generatedModel, dirNameModels, `${name}.ts`, true);
+    await writeToFile(lazy ? generatedModel : delazify(generatedModel), dirNameModels, `${name}.ts`, true);
     await bluebird.each(model.fields.filter(isEnum), async field => {
       const enumName = getEnumName(field);
       await writeToFile(generateEnum(model, field), dirNameEnums, `${enumName}.ts`, true);

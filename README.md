@@ -39,6 +39,9 @@ Generate TypeORM models from model.er file
 USAGE
   $ backend-generator er [DESTINATION]
 
+OPTIONS
+  --lazy
+
 EXAMPLE
   $ backend-generator er
   ER model generated.
