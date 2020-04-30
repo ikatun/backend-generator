@@ -97,6 +97,10 @@ function createManyToManyRelation(first: IRelationComponent, second: IRelationCo
     throw new Error('Missing `through` for many to many relation');
   }
 
+  if (first.through !== second.through) {
+    throw new Error('Relation `through` must match');
+  }
+
   const relationDefinition1: IRelationDefinition = {
     first: {
       source: first.source,
@@ -196,6 +200,16 @@ export function parseErModel(data: string) {
   const modelsDefinitions = modelLines.map(getModel);
   const relationsDefinitions = relationsLines.map(getRelation);
   const singleRelations = flatten(relationsDefinitions.map(convertToSingleRelations));
+
+  const modelsNames = modelsDefinitions.map(d => d.name);
+  for (const relation of singleRelations) {
+    if (!modelsNames.includes(relation.myTypeName)) {
+      throw new Error('Missing definition for model ' + relation.myTypeName);
+    }
+    if (!modelsNames.includes(relation.otherTypeName)) {
+      throw new Error('Missing definition for model ' + relation.otherTypeName);
+    }
+  }
 
   return modelsDefinitions.map(
     (modelDefinition): ISingleErModel => {
