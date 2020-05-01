@@ -18,7 +18,7 @@ export function generateOneToOneOwnerDeclarations(relations: Array<ISingleErRela
       r =>
         `  @ORM.OneToOne(() => ${r.otherTypeName}, (${lowerFirst(r.otherTypeName)}) => ${lowerFirst(r.otherTypeName)}.${
           r.otherName
-        })
+        } ${generateRelationArgs(r)})
   public ${getRelationName(r)}: Promise<${getRelationOtherTypeName(r)}>;
 
   @ORM.Column({ type: 'int' })
