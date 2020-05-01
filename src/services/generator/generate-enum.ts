@@ -5,8 +5,7 @@ function generateEnumValue(enumValue) {
 }
 
 export function generateEnum(model: ISingleErModel, field: IFieldDefinition) {
-  return `import { registerEnumType } from 'type-graphql';
-
+  return `
 export enum ${getEnumName(field)} {
 ${field.type
   .split('|')
@@ -14,9 +13,5 @@ ${field.type
   .map(x => `  ${x}`)
   .join(',\n')}
 }
-
-registerEnumType(${getEnumName(field)}, {
-  name: '${getEnumName(field)}',
-});
 `;
 }
