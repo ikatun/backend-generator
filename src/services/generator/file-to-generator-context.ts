@@ -7,7 +7,6 @@ export function fileToGeneratorContext(dirName: string, name: string): IGenerato
   const filePath = path.join(dirName, name);
   let existingContent;
   try {
-    console.log('filePath', filePath);
     existingContent = fs.readFileSync(filePath, 'utf8');
   } catch (e) {
     existingContent = '';
